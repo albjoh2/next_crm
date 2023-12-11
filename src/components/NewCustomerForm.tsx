@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { FormEvent } from "react";
 
 const NewCustomerForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -27,8 +26,8 @@ const NewCustomerForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <form onSubmit={handleSubmit} className="flex justify-center flex-col w-72">
+      <label className="flex justify-between m-1">
         Name:
         <input
           type="text"
@@ -36,7 +35,7 @@ const NewCustomerForm: React.FC = () => {
           onChange={(e) => setName(e.target.value)}
         />
       </label>
-      <label>
+      <label className="flex justify-between m-1">
         Email:
         <input
           type="email"
@@ -44,7 +43,7 @@ const NewCustomerForm: React.FC = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
       </label>
-      <label>
+      <label className="flex justify-between m-1">
         Phone:
         <input
           type="tel"
@@ -52,7 +51,11 @@ const NewCustomerForm: React.FC = () => {
           onChange={(e) => setPhone(e.target.value)}
         />
       </label>
-      <input type="submit" value="Submit" />
+      <input
+        type="submit"
+        value="Submit"
+        className="bg-slate-900 text-neutral-300 p-2 m-2 rounded w-24 self-center  hover:bg-slate-800 hover:cursor-pointer"
+      />
     </form>
   );
 };

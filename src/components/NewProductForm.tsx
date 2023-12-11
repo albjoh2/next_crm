@@ -26,8 +26,8 @@ const NewProductForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <form onSubmit={handleSubmit} className="flex justify-center flex-col w-72">
+      <label className="flex justify-between m-1">
         Name:
         <input
           type="text"
@@ -35,7 +35,7 @@ const NewProductForm: React.FC = () => {
           onChange={(e) => setName(e.target.value)}
         />
       </label>
-      <label>
+      <label className="flex justify-between m-1">
         Description:
         <input
           type="text"
@@ -43,7 +43,7 @@ const NewProductForm: React.FC = () => {
           onChange={(e) => setDescription(e.target.value)}
         />
       </label>
-      <label>
+      <label className="flex justify-between m-1">
         Price:
         <input
           type="number"
@@ -51,7 +51,11 @@ const NewProductForm: React.FC = () => {
           onChange={(e) => setPrice(e.target.value)}
         />
       </label>
-      <input type="submit" value="Submit" />
+      <input
+        type="submit"
+        value="Submit"
+        className="bg-slate-900 text-neutral-300 p-2 m-2 rounded w-24 self-center hover:bg-slate-800 hover:cursor-pointer"
+      />
     </form>
   );
 };
