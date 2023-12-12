@@ -51,3 +51,19 @@ export async function POST(request: Request) {
     { status: 200 }
   );
 }
+
+export async function GET() {
+  let customers = [];
+  try {
+    const result = await excuteQuery({
+      query: "SELECT * FROM customers",
+      values: [],
+    });
+    customers = JSON.parse(JSON.stringify(result));
+  } catch (error) {
+    console.log(error);
+  }
+
+  //return the customers from the database to the client
+  return NextResponse.json(customers, { status: 200 });
+}
