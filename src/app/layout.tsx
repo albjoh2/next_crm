@@ -30,10 +30,16 @@ export default function RootLayout({
                   <Link href={"newProduct"}>Ny produkt</Link>
                 </li>
                 <li>
+                  <Link href={"newOrder"}>Ny order</Link>
+                </li>
+                <li>
                   <Link href={"listCustomers"}>Lista kunder</Link>
                 </li>
                 <li>
                   <Link href={"listProducts"}>Lista produkter</Link>
+                </li>
+                <li>
+                  <Link href={"listOrders"}>Lista order</Link>
                 </li>
               </ul>
             </nav>
