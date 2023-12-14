@@ -2,7 +2,7 @@
 import React, { useState, useEffect, use } from "react";
 
 interface Customer {
-  ID: number;
+  ID: string;
   createdAt: string;
   Name: string;
   Email: string;
@@ -10,7 +10,7 @@ interface Customer {
 }
 
 interface Product {
-  ID: number;
+  ID: string;
   createdAt: string;
   Name: string;
   Description: string;
@@ -24,44 +24,69 @@ const NewOrderForm: React.FC = () => {
   const [orderRows, setOrderRows] = useState([
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
     {
       productId: "",
-      quantity: "",
+      quantity: 0,
+      Delivery_date: "",
     },
   ]); // [ {rowNr, product, quantity}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (customerId === "") {
+      alert("Välj en kund");
+      return;
+    }
+    let correctOrderRow = false;
+    for (let i = 0; i < orderRows.length; i++) {
+      if (orderRows[i].productId !== "") {
+        if (orderRows[i].quantity !== 0) {
+          correctOrderRow = true;
+        }
+      }
+    }
+    if (!correctOrderRow) {
+      alert("Fyll i produkt och antal på en rad");
+      return;
+    }
     const response = await fetch("/api/order", {
       method: "POST",
       headers: {
@@ -116,14 +141,33 @@ const NewOrderForm: React.FC = () => {
     }
   }
 
+  const changeDate = (date: string) => {
+    const newOrderRows = [...orderRows];
+    newOrderRows.forEach((orderRow) => {
+      orderRow.Delivery_date = date;
+    });
+    setOrderRows(newOrderRows);
+  };
+
   useEffect(() => {
     getCustomers();
     getProducts();
   }, []);
 
+  useEffect(() => {
+    if (customers.length === 0 || products.length === 0) return;
+    //itterate through orderRows and set productId to products[0].Name
+    const newOrderRows = [...orderRows];
+    newOrderRows.forEach((orderRow) => {
+      orderRow.productId = products[0].ID;
+    });
+    setOrderRows(newOrderRows);
+    setCustomerId(customers[0].ID);
+  }, [customers, products]);
+
   return (
-    <form onSubmit={handleSubmit} className="flex justify-center flex-col w-72">
-      <label className="flex justify-between">
+    <form onSubmit={handleSubmit} className="flex justify-center flex-col">
+      <label className="flex">
         Kund:
         <select
           name=""
@@ -139,6 +183,12 @@ const NewOrderForm: React.FC = () => {
             </option>
           ))}
         </select>
+        <input
+          type="date"
+          onChange={(e) => {
+            changeDate(e.target.value);
+          }}
+        />
       </label>
       <ul className="mt-10 mb-10">
         {orderRows.map((orderRow, index) => (
@@ -163,13 +213,25 @@ const NewOrderForm: React.FC = () => {
               </select>
             </label>
             <label className="flex justify-between">
-              quantity:
+              Antal:
               <input
                 type="number"
                 value={orderRow.quantity}
                 onChange={(e) => {
                   const newOrderRows = [...orderRows];
-                  newOrderRows[index].quantity = e.target.value;
+                  newOrderRows[index].quantity = parseInt(e.target.value);
+                  setOrderRows(newOrderRows);
+                }}
+              />
+            </label>
+            <label className="flex justify-between">
+              Leverans:
+              <input
+                type="date"
+                value={orderRow.Delivery_date}
+                onChange={(e) => {
+                  const newOrderRows = [...orderRows];
+                  newOrderRows[index].Delivery_date = e.target.value;
                   setOrderRows(newOrderRows);
                 }}
               />

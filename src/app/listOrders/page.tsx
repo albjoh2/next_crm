@@ -3,24 +3,22 @@ import { FC, useEffect, useState } from "react";
 
 interface pageProps {}
 
-interface Sales {
+interface OrderRow {
   ID: string;
   createdAt: string;
   ProductID: string;
-  OrderNumber: string;
-  CustomerID: string;
   Quantity: number;
+  Delivery_date: string;
 }
 
 interface Order {
-  OrderNumber: string;
-  customerID: string;
+  ID: string;
+  CustomerID: string;
   createdAt: string;
-  sales: Sales[];
+  orderRows: OrderRow[];
 }
 
 const page: FC<pageProps> = ({}) => {
-  const [sales, setSales] = useState<Sales[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
 
   async function getOrders() {
@@ -33,29 +31,8 @@ const page: FC<pageProps> = ({}) => {
 
     if (response.ok) {
       const data = await response.json();
-
-      setSales(data);
-
-      setOrders(
-        data.reduce((acc: Order[], cur: Sales) => {
-          const order = acc.find(
-            (order) => order.OrderNumber === cur.OrderNumber
-          );
-
-          if (order) {
-            order.sales.push(cur);
-          } else {
-            acc.push({
-              OrderNumber: cur.OrderNumber,
-              customerID: cur.CustomerID,
-              createdAt: cur.createdAt,
-              sales: [cur],
-            });
-          }
-
-          return acc;
-        }, [])
-      );
+      console.log(data);
+      setOrders(data);
     } else {
       // Handle error
     }
@@ -70,33 +47,40 @@ const page: FC<pageProps> = ({}) => {
       <h1 className="text-3xl text-center">orders</h1>
 
       {orders.map((order) => (
-        <table className="bg-gray-300 m-5 min-w-full" key={order.OrderNumber}>
+        <table
+          className="block bg-gray-300 m-5 min-w-fit p-10 rounded-md"
+          key={order.ID}
+        >
           <thead>
             <tr>
               <td>order</td>
-              <td>{order.OrderNumber}</td>
+              <td>{order.ID}</td>
             </tr>
             <tr>
               <td>customer</td>
-              <td>{order.customerID}</td>
+              <td>{order.CustomerID}</td>
             </tr>
             <tr>
               <td>createdAt</td>
               <td>{order.createdAt}</td>
             </tr>
           </thead>
-          <tbody className="text-center ">
+          <tbody className="text-center">
             <tr>
-              <th>rowId</th>
-              <th>product</th>
-              <th>quantity</th>
+              <th>Row</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Delivery</th>
             </tr>
 
-            {order.sales.map((sale) => (
-              <tr key={sale.ID}>
-                <td>{sale.ID}</td>
-                <td>{sale.ProductID}</td>
-                <td>{sale.Quantity}</td>
+            {order.orderRows.map((orderRow) => (
+              <tr key={orderRow.ID}>
+                <td>{orderRow.ID}</td>
+                <td>{orderRow.ProductID}</td>
+                <td>{orderRow.Quantity}</td>
+                <td>
+                  {new Date(orderRow.Delivery_date).toISOString().split("T")[0]}
+                </td>
               </tr>
             ))}
           </tbody>
